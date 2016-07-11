@@ -3,24 +3,28 @@ use Mojo::Base -base;
 use Mojo::Loader qw(data_section);
 use Mojo::Template;
 use Mojo::URL;
-use Mojo::Util qw(dumper url_unescape);
+use Mojo::Util qw(url_unescape);
 
 sub mt {
-  state $mt = Mojo::Template->new(vars => 1, tag_start=>'{%', tag_end=>'%}', line_start=>'$$', prepend=>'no strict qw(vars); no warnings qw(uninitialized);', @_);
+  state $mt = Mojo::Template->new(vars => 1, tag_start=>'{%', tag_end=>'%}', prepend=>'no strict qw(vars); no warnings qw(uninitialized);', @_);# line_start=>'$$',
 }
 
 
 sub new {
-  my ($class, $pkg, %arg) = @_;
-  
+  my ($class) = shift;
+  bless data(@_);
+}
+
+sub data {
+  my ($pkg, %arg) = @_;
   my $data = {};
   while ( my ($k, $t) = each data_section $pkg)  {
     my $url = Mojo::URL->new($k);
     my ($name, $param) = (url_unescape($url->path), $url->query->to_hash);
+    utf8::decode($name);
     $data->{$name} = DBIx::Mojo::Statement->new(name=>$name, sql=>$t, param=>$param, mt=>mt(%{$arg{mt} || {}}), vars=>$arg{vars} || {});
   }
-  
-  bless $data;
+  return $data;
 }
 
 our $VERSION = '0.01';
