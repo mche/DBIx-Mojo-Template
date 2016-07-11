@@ -27,6 +27,14 @@ sub data {
   return $data;
 }
 
+sub render {
+  my ($self, $key, %arg) = @_;
+    die "No such item by key [$key] on this DICT, please check processed package"
+        unless $self->{$key};
+    $self->{$key}->render(%arg);
+  
+}
+
 our $VERSION = '0.01';
 
 #=============================================
