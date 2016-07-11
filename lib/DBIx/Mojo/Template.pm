@@ -7,19 +7,21 @@ use Mojo::Util qw(url_unescape);
 
 sub new {
   my ($class) = shift;
-  bless data(@_);
+  bless $class->data(@_);
 }
 
 sub singleton {
   my ($class) = shift;
   state $singleton = bless {};
-  my $data = data(@_);
+  my $data = $class->data(@_);
   @$singleton{ keys %$data } = values %$data;
   $singleton;
 }
 
 sub data {
-  my ($pkg, %arg) = @_;
+  my ($class, $pkg, %arg) = @_;
+  die "Package not defined!"
+    unless $pkg;
   my $data = {};
   while ( my ($k, $t) = each data_section $pkg)  {
     my $url = Mojo::URL->new($k);
@@ -85,18 +87,62 @@ DBIx::Mojo::Template - Render SQL statements templates by Mojo::Template
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
+  use DBIx::Mojo::Template;
 
-Perhaps a little code snippet.
-
-    use DBIx::Mojo::Template;
-
-    my $foo = DBIx::Mojo::Template->new();
-    ...
+  my $dict = DBIx::Mojo::Template->new(__PACKAGE__,...);
+  
+  my $sql = $dict->{'foo'}->render(table=>'foo', where=> 'where col=?');
 
 
 =head1 SUBROUTINES/METHODS
 
+=head2 new
+
+  my $dict = DBIx::Mojo::Template->new('Foo::Bar', vars=>{foo=>'bar'}, mt=>{line_start=>'+',})
+
+where arguments:
+
+=over 4
+
+=item * $pkg (string)
+
+Package name, where __DATA__ section SQL dictionary. Package must be loaded (use/require) before!
+
+=item * vars (hashref)
+
+Hashref of this dict templates variables. Vars can be merged when tender - see L<#render>.
+
+=item * mt (hashref)
+
+For Mojo::Template object attributes. See L<Mojo::Template#ATTRIBUTES>.
+
+  mt=>{ line_start=>'+', }
+
+Defaults attrs:
+
+  mt=> {vars => 1, prepend=>'no strict qw(vars); no warnings qw(uninitialized);',}
+
+=back
+
+=head2 singleton
+
+Merge ditcs to one. Arguments same as L<#new>.
+
+  DBIx::Mojo::Template->singleton(...);
+
+=head2 render
+
+Render template dict key.
+
+  my $sql = $dict->render($key, var1=>..., var2 => ...,);
+
+Each dict item is a object DBIx::Mojo::Statement with one method C<render>:
+
+  my $sql = $dict->{'key foo'}->render(bar=>'baz', ...);
+
+=head2 data
+
+Same as L<#new> but returns unblessed hashref dict.
 
 =head1 AUTHOR
 
