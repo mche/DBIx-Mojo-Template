@@ -6,7 +6,7 @@ use Mojo::URL;
 use Mojo::Util qw(dumper url_unescape);
 
 sub mt {
-  state $mt = Mojo::Template->new(vars => 1, tag_start=>'{%', tag_end=>'%}', line_start=>'$$', prepend=>'no strict qw(vars); no warnings qw(uninitialized);', @_);
+  state $mt = Mojo::Template->new(vars => 1, tag_start=>'{%', tag_end=>'%}', line_start=>'$$',)->prepend('no strict qw(vars); no warnings qw(uninitialized);');
 }
 
 
@@ -17,7 +17,7 @@ sub new {
   while ( my ($k, $t) = each data_section $pkg)  {
     my $url = Mojo::URL->new($k);
     my ($name, $param) = (url_unescape($url->path), $url->query->to_hash);
-    $data->{$name} = DBIx::Mojo::Statement->new(name=>$name, sql=>$t, param=>$param, mt=>mt(%{$arg{mt} || {}}), vars=>$arg{vars} || {});
+    $data->{$name} = DBIx::Mojo::Statement->new(name=>$name, sql=>$t, param=>$param, mt=>mt, vars=>\%arg);
   }
   
   bless $data;
@@ -39,7 +39,7 @@ sub render {
   my $self = shift;
   my $vars =ref $_[0] ? shift : { @_ };
   
-  $self->mt->render($self->sql, %$vars ? %{$self->vars} ? merge($vars, $self->vars) : $vars : $self->vars);
+  $self->mt->render($self->sql, merge($vars, $self->vars));
   
 }
 
