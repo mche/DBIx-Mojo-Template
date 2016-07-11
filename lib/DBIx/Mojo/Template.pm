@@ -150,7 +150,7 @@ Same as L<#new> but returns unblessed hashref dict.
 
 =head1 BUGS / CONTRIBUTING
 
-Please report any bugs or feature requests at L<https://github.com/mche/DBIx-POS-Template/issues>. Pull requests also welcome.
+Please report any bugs or feature requests at L<https://github.com/mche/DBIx-Mojo-Template/issues>. Pull requests also welcome.
 
 
 =head1 LICENSE AND COPYRIGHT

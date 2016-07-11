@@ -8,7 +8,7 @@ binmode STDERR, ":utf8";
 my $t = DBIx::Mojo::Template->new(__PACKAGE__, vars=>{'фу'=>'фу1', 'бар'=>'бар1'}, mt=>{tag_start=>'{%', tag_end=>'%}',});
 
 my $test1 = sub {
-  like $t->{'фу/бар.1'}, qr/\$фу/, 'string';
+  like $t->{'фу/бар.1'}, qr/\$фу/, 'string non render';
   like $t->{'фу/бар.1'}->render, qr/фу1.бар1/, 'render global vars';
   like $t->{'фу/бар.1'}->render('бар'=>'бар2'), qr/фу1.бар2/, 'render merge vars';
   is $t->{'фу/бар.1'}->param->{'кэш'}, 'есть', 'param';
