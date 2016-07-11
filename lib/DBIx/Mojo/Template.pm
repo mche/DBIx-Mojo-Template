@@ -6,7 +6,7 @@ use Mojo::URL;
 use Mojo::Util qw(url_unescape);
 
 sub mt {
-  state $mt = Mojo::Template->new(vars => 1, tag_start=>'{%', tag_end=>'%}', prepend=>'no strict qw(vars); no warnings qw(uninitialized);', @_);# line_start=>'$$',
+  state $mt = Mojo::Template->new(vars => 1, prepend=>'no strict qw(vars); no warnings qw(uninitialized);', @_);# line_start=>'$$',
 }
 
 
