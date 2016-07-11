@@ -5,14 +5,17 @@ use Mojo::Template;
 use Mojo::URL;
 use Mojo::Util qw(url_unescape);
 
-sub mt {
-  state $mt = Mojo::Template->new(vars => 1, prepend=>'no strict qw(vars); no warnings qw(uninitialized);', @_);# line_start=>'$$',
-}
-
-
 sub new {
   my ($class) = shift;
   bless data(@_);
+}
+
+sub singleton {
+  my ($class) = shift;
+  state $singleton = bless {};
+  my $data = data(@_);
+  @$singleton{ keys %$data } = values %$data;
+  $singleton;
 }
 
 sub data {
@@ -22,10 +25,17 @@ sub data {
     my $url = Mojo::URL->new($k);
     my ($name, $param) = (url_unescape($url->path), $url->query->to_hash);
     utf8::decode($name);
-    $data->{$name} = DBIx::Mojo::Statement->new(name=>$name, sql=>$t, param=>$param, mt=>mt(%{$arg{mt} || {}}), vars=>$arg{vars} || {});
+    $data->{$name} = DBIx::Mojo::Statement->new(name=>$name, sql=>$t, param=>$param, mt=>_mt(%{$arg{mt} || {}}), vars=>$arg{vars} || {});
   }
+  die "None DATA dict in package [$pkg]"
+    unless %$data;
   return $data;
 }
+
+sub _mt {
+  Mojo::Template->new(vars => 1, prepend=>'no strict qw(vars); no warnings qw(uninitialized);', @_);# line_start=>'$$',
+}
+
 
 sub render {
   my ($self, $key, %arg) = @_;
