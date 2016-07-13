@@ -42,7 +42,7 @@ sub sth {
   my $st = $dict->{$name}
     or croak "No such name[$name] in SQL dict! @{[ join ':', keys %$dict  ]}";
   #~ my %arg = @_;
-  my $sql = $st->template(@_).sprintf("\n--Statement name[%s]", $st->name); # ->template(%$template ? %arg ? %{merge($template, \%arg)} : %$template : %arg)
+  my $sql = $st->render(@_).sprintf("\n--Statement name[%s]", $st->name); # ->template(%$template ? %arg ? %{merge($template, \%arg)} : %$template : %arg)
   my $param = $st->param;
   
   my $sth;
