@@ -136,7 +136,24 @@ Hashref variables applies in statement templates.
 
 =head2 singleton
 
+Initialize attributes for child model modules.
+
 =head2 sth
+
+=head1 Templates
+
+Body of template statement get as:
+
+  $mFoo->dict->{'foo'}->sql
+
+Templates name can has additional params as ulr query:
+
+  @@ foo.bar/baz?a=156&b=c
+  ...
+
+then model object the name of statement is url path and query is param:
+
+  $mFoo->dict->{'foo.bar/baz'}->param->{b} # 'c'
 
 =head1 AUTHOR
 
