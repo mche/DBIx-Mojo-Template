@@ -23,7 +23,10 @@ sub new {
     unless $self->dbh;
     
   $self->template_vars(merge($self->template_vars || {}, $singleton->template_vars))
-    if $singleton->template_vars;
+    if $singleton->template_vars && %{$singleton->template_vars};
+  
+  $self->mt(merge($self->mt || {}, $singleton->mt))
+    if $singleton->mt && %{$singleton->mt};
   
   my $pkg = ref $self;
   
@@ -134,11 +137,18 @@ Hashref variables applies in statement templates.
 
 =head2 new
 
+Define or copy/merge attributes from C<singleton>.
+
 =head2 singleton
 
-Initialize attributes for child model modules.
+Initialize default attributes for child model modules.
 
 =head2 sth
+
+This is main method.
+
+First input arg is dict statement name, next args C<< key => val >> are template variables.
+Return DBI prepared (cached if param 'cached' is true) statement.
 
 =head1 Templates
 
