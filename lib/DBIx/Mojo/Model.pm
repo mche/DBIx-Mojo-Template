@@ -141,7 +141,7 @@ Define or copy/merge attributes from C<singleton>.
 
 =head2 singleton
 
-Initialize default attributes for child model modules.
+Initialize default attributes for child model modules. Mostly C<dbh> and C<template_vars>
 
 =head2 sth
 
