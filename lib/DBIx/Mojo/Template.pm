@@ -136,9 +136,10 @@ Defaults attrs:
 
 =head2 singleton
 
-Merge ditcs to one. Arguments same as L<#new>.
+Merge ditcs packages to one. Arguments same as L<#new>.
 
-  DBIx::Mojo::Template->singleton('Foo::Bar');
+  DBIx::Mojo::Template->singleton('Foo');
+  my $dict = DBIx::Mojo::Template->singleton('Bar');
 
 =head2 render
 
