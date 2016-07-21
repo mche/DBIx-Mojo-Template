@@ -106,11 +106,11 @@ In child model must define SQL dict in __DATA__ of model package:
 In controller:
 
   ...
-  my $mFoo = do {require Model::Foo; Model::Foo->new;};
+  has model => sub { require Model::Foo; Model::Foo->new };
   
   sub actionFoo {
     my $c = shift;
-    my $foo = $mFoo->foo($c->param('id'));
+    my $foo = $c->model->foo($c->param('id'));
     ...
   
   }
@@ -127,7 +127,7 @@ DBIx::Mojo::Template object. If not defined then will auto create from __DATA__ 
 
 =head2 mt
 
-Hashref Mojo::Template object attributes. Will passed to C<< DBIx::Mojo::Template->new >> then dict auto create
+Hashref Mojo::Template object attributes. Will passed to C<< Mojo::Template->new >> then dict auto create
 
 =head2 template_vars
 

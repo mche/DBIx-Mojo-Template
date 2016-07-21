@@ -38,6 +38,7 @@ sub _mt {
   Mojo::Template->new(vars => 1, prepend=>'no strict qw(vars); no warnings qw(uninitialized);', @_);# line_start=>'$$',
 }
 
+sub template { shift->render(@_) }
 
 sub render {
   my ($self, $key, %arg) = @_;
@@ -47,7 +48,7 @@ sub render {
   
 }
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 #=============================================
 package DBIx::Mojo::Statement;
@@ -58,6 +59,8 @@ use Hash::Merge qw(merge);
 has [qw(name sql param mt vars)];
 
 use overload '""' => sub { shift->sql };
+
+sub template { shift->render(@_) }
 
 sub render {
   my $self = shift;
@@ -83,7 +86,7 @@ DBIx::Mojo::Template - Render SQL statements templates by Mojo::Template
 
 =head1 VERSION
 
-0.01
+0.03
 
 =head1 SYNOPSIS
 
