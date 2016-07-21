@@ -23,7 +23,7 @@ sub data {
   die "Package not defined!"
     unless $pkg;
   my $data = {};
-  while ( my ($k, $t) = each data_section $pkg)  {
+  while ( my ($k, $t) = each %{data_section $pkg})  {
     my $url = Mojo::URL->new($k);
     my ($name, $param) = (url_unescape($url->path), $url->query->to_hash);
     utf8::decode($name);
@@ -48,7 +48,7 @@ sub render {
   
 }
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 #=============================================
 package DBIx::Mojo::Statement;
@@ -86,7 +86,7 @@ DBIx::Mojo::Template - Render SQL statements templates by Mojo::Template
 
 =head1 VERSION
 
-0.04
+0.05
 
 =head1 SYNOPSIS
 
