@@ -48,7 +48,7 @@ sub render {
   
 }
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 #=============================================
 package DBIx::Mojo::Statement;
@@ -86,22 +86,29 @@ DBIx::Mojo::Template - Render SQL statements templates by Mojo::Template
 
 =head1 VERSION
 
-0.03
+0.04
 
 =head1 SYNOPSIS
 
   use DBIx::Mojo::Template;
 
-  my $dict = DBIx::Mojo::Template->new(__PACKAGE__,...);
+  my $dict = DBIx::Mojo::Template->new(__PACKAGE__,mt=>{tag_start=>'%{', tag_end=>'%}',});
   
-  my $sql = $dict->{'foo'}->render(table=>'foo', where=> 'where col=?');
+  my $sql = $dict->{'foo'}->render(table=>'foo', where=> 'where id=?');
+  
+  __DATA__
+  @@ foo?cache=1
+  %# my foo statement with prepare_cached (model sth)
+  select *
+  from {% $table %}
+  {% $where %}
 
 
 =head1 SUBROUTINES/METHODS
 
 =head2 new
 
-  my $dict = DBIx::Mojo::Template->new('Foo::Bar', vars=>{foo=>'bar'}, mt=>{line_start=>'+',})
+  my $dict = DBIx::Mojo::Template->new('Foo::Bar', vars=>{...}, mt=>{...})
 
 where arguments:
 
@@ -113,7 +120,7 @@ Package name, where __DATA__ section SQL dictionary. Package must be loaded (use
 
 =item * vars (hashref)
 
-Hashref of this dict templates variables. Vars can be merged when tender - see L<#render>.
+Hashref of this dict templates variables. Vars can be merged when render - see L<#render>.
 
 =item * mt (hashref)
 
@@ -131,7 +138,7 @@ Defaults attrs:
 
 Merge ditcs to one. Arguments same as L<#new>.
 
-  DBIx::Mojo::Template->singleton(...);
+  DBIx::Mojo::Template->singleton('Foo::Bar');
 
 =head2 render
 
