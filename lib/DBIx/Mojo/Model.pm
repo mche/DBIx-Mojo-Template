@@ -136,6 +136,8 @@ Boolean switch: 0 - use DBI caching ($dbh->prepare_cached) 1 overvise this modul
   @@ foo query name?cached=1
   select ...
 
+Defaults is true for save statement inside DBIx::Mojo::Statement object atribute C<sth>.
+
 =head1 METHODS
 
 =head2 new
