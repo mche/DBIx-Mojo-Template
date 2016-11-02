@@ -7,7 +7,7 @@ use Hash::Merge qw( merge );
 my %DICT_CACHE = ();# для каждого пакета/модуля
 
 has [qw(dbh dict template_vars mt)];
-
+has self_cache_st => 1; # 0 - use DBI caching 1 overvise this module caching
 
 #init once
 sub singleton {
@@ -43,21 +43,17 @@ sub sth {
     or croak "No such name[$name] in SQL dict! @{[ join ':', keys %$dict  ]}";
   #~ my %arg = @_;
   my $sql = $st->render(@_).sprintf("\n--Statement name[%s]", $st->name); # ->template(%$template ? %arg ? %{merge($template, \%arg)} : %$template : %arg)
-  my $param = $st->param;
+  my $param_cached = $st->param && $st->param->{cached} || $st->param->{cache};
   
-  my $sth;
+  return $st->sth || $st->sth($self->dbh->prepare($sql))->sth
+    if $self->self_cache_st && $param_cached;
 
   #~ local $dbh->{TraceLevel} = "3|DBD";
   
-  if ($param && $param->{cached}) {
-    $sth = $self->dbh->prepare_cached($sql);
-    #~ warn "ST cached: ", $sth->{pg_prepare_name};
-  } else {
-    $sth = $self->dbh->prepare($sql);
-  }
+  return $self->dbh->prepare_cached($sql)
+    if $param_cached;
   
-  return $sth;
-  
+  return $self->dbh->prepare($sql);
 }
 
 =pod
@@ -96,7 +92,7 @@ In child model must define SQL dict in __DATA__ of model package:
   }
   
   __DATA__
-  @@ foo?cache=1
+  @@ foo?cached=1
   %# my foo statement with prepare_cached
   select *
   from foo

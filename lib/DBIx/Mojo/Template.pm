@@ -48,7 +48,7 @@ sub render {
   
 }
 
-our $VERSION = '0.051';
+our $VERSION = '0.052';
 
 #=============================================
 package DBIx::Mojo::Statement;
@@ -56,7 +56,8 @@ package DBIx::Mojo::Statement;
 use Mojo::Base -base;
 use Hash::Merge qw(merge);
 
-has [qw(name sql param mt vars)];
+has [qw(name sql param mt vars sth)];
+# sth - attr for save cached dbi statement
 
 use overload '""' => sub { shift->sql };
 
@@ -86,7 +87,7 @@ DBIx::Mojo::Template - Render SQL statements templates by Mojo::Template
 
 =head1 VERSION
 
-0.051
+0.052
 
 =head1 SYNOPSIS
 
