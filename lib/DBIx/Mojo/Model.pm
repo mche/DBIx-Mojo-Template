@@ -129,6 +129,13 @@ Hashref Mojo::Template object attributes. Will passed to C<< Mojo::Template->new
 
 Hashref variables applies in statement templates.
 
+=head2 self_cache_st
+
+Boolean switch: 0 - use DBI caching ($dbh->prepare_cached) 1 overvise this module caching. The statemnt must defined C<cached> param:
+
+  @@ foo query name?cached=1
+  select ...
+
 =head1 METHODS
 
 =head2 new
