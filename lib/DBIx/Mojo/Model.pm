@@ -37,7 +37,7 @@ sub new {
     unless $self->dict;
   
   $self->debug
-    && say STDERR "[DEBUG $PKG new] parsed dict keys [@{[@{$self->dict}]}] for class [$class]";
+    && say STDERR "[DEBUG $PKG new] parsed dict keys [@{[keys %{$self->dict}]}] for class [$class]";
   
   $self;
 }
