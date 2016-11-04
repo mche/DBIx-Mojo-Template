@@ -7,7 +7,10 @@ use Hash::Merge qw( merge );
 my %DICT_CACHE = ();# для каждого пакета/модуля
 
 has [qw(dbh dict template_vars mt)];
-has self_cache_st => 1; # 0 - use DBI caching 1 overvise this module caching
+has dbi_cache_st => 1; # 1 - use DBI caching and 0 overvise this module caching
+
+has debug => $ENV{DEBUG_DBIx_Mojo_Model} || 0;
+my $PKG = __PACKAGE__;
 
 #init once
 sub singleton {
@@ -28,10 +31,14 @@ sub new {
   $self->mt(merge($self->mt || {}, $singleton->mt))
     if $singleton->mt && %{$singleton->mt};
   
-  my $pkg = ref $self;
+  my $class = ref $self;
   
-  $self->dict( $DICT_CACHE{$pkg} ||= DBIx::Mojo::Template->new($pkg, mt=> $self->mt, vars => $self->template_vars) )
+  $self->dict( $DICT_CACHE{$class} ||= DBIx::Mojo::Template->new($class, mt=> $self->mt, vars => $self->template_vars) )
     unless $self->dict;
+  
+  $self->debug
+    && say STDERR "[DEBUG $PKG new] parsed dict keys [@{[@{$self->dict}]}] for class [$class]";
+  
   $self;
 }
 
@@ -43,16 +50,16 @@ sub sth {
     or croak "No such name[$name] in SQL dict! @{[ join ':', keys %$dict  ]}";
   #~ my %arg = @_;
   my $sql = $st->render(@_).sprintf("\n--Statement name[%s]", $st->name); # ->template(%$template ? %arg ? %{merge($template, \%arg)} : %$template : %arg)
-  my $param_cached = $st->param && $st->param->{cached} || $st->param->{cache};
-  
-  return $st->sth || $st->sth($self->dbh->prepare($sql))->sth
-    if $self->self_cache_st && $param_cached;
-
+  if (my $param_cached = $st->param && $st->param->{cached} || $st->param->{cache}) {
+    $self->debug
+      && say STDERR sprintf("[DEBUG $PKG sth] statement [$name] is a %s", $self->dbi_cache_st ? 'DBI prepare_cached' : 'self model cached');
+    return $self->dbh->prepare_cached($sql)
+      if $self->dbi_cache_st;
+    return $st->sth || $st->sth($self->dbh->prepare($sql))->sth;
+  }
+  $self->debug
+    && say STDERR sprintf("[DEBUG $PKG sth] statement [%s] is a dbh prepare", $name);
   #~ local $dbh->{TraceLevel} = "3|DBD";
-  
-  return $self->dbh->prepare_cached($sql)
-    if $param_cached;
-  
   return $self->dbh->prepare($sql);
 }
 
@@ -129,9 +136,12 @@ Hashref Mojo::Template object attributes. Will passed to C<< Mojo::Template->new
 
 Hashref variables applies in statement templates.
 
-=head2 self_cache_st
+=head2 dbi_cache_st
 
-Boolean switch: 0 - use DBI caching ($dbh->prepare_cached) 1 overvise this module caching. The statemnt must defined C<cached> param:
+Boolean switch: 1(true) - use DBI caching ($dbh->prepare_cached)
+  and 0(false) overvise this module caching.
+
+The statement must has defined C<cached> param:
 
   @@ foo query name?cached=1
   select ...

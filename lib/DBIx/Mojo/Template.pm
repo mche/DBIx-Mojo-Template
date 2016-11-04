@@ -5,6 +5,9 @@ use Mojo::Template;
 use Mojo::URL;
 use Mojo::Util qw(url_unescape);
 
+#~ has debug => $ENV{DEBUG_DBIx_Mojo_Template} || 0;
+#~ my $pkg = __PACKAGE__;
+
 sub new {
   my ($class) = shift;
   bless $class->data(@_);
@@ -48,7 +51,7 @@ sub render {
   
 }
 
-our $VERSION = '0.052';
+our $VERSION = '0.053';
 
 #=============================================
 package DBIx::Mojo::Statement;
@@ -87,7 +90,7 @@ DBIx::Mojo::Template - Render SQL statements templates by Mojo::Template
 
 =head1 VERSION
 
-0.052
+0.053
 
 =head1 SYNOPSIS
 
