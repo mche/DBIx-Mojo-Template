@@ -51,7 +51,7 @@ sub render {
   
 }
 
-our $VERSION = '0.053';
+our $VERSION = '0.054';
 
 #=============================================
 package DBIx::Mojo::Statement;
@@ -90,7 +90,7 @@ DBIx::Mojo::Template - Render SQL statements templates by Mojo::Template
 
 =head1 VERSION
 
-0.053
+0.054
 
 =head1 SYNOPSIS
 
