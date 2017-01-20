@@ -4,6 +4,7 @@ use Mojo::Loader qw(data_section);
 use Mojo::Template;
 use Mojo::URL;
 use Mojo::Util qw(url_unescape);
+use Scalar::Util 'weaken';
 
 #~ has debug => $ENV{DEBUG_DBIx_Mojo_Template} || 0;
 #~ my $pkg = __PACKAGE__;
@@ -26,11 +27,12 @@ sub data {
   die "Package not defined!"
     unless $pkg;
   my $data = {};
+  weaken $data;
   while ( my ($k, $t) = each %{data_section $pkg})  {
     my $url = Mojo::URL->new($k);
     my ($name, $param) = (url_unescape($url->path), $url->query->to_hash);
     utf8::decode($name);
-    $data->{$name} = DBIx::Mojo::Statement->new(name=>$name, sql=>$t, param=>$param, mt=>_mt(%{$arg{mt} || {}}), vars=>$arg{vars} || {});
+    $data->{$name} = DBIx::Mojo::Statement->new(dict=>$data, name=>$name, sql=>$t, param=>$param, mt=>_mt(%{$arg{mt} || {}}), vars=>$arg{vars} || {});
   }
   die "None DATA dict in package [$pkg]"
     unless %$data;
@@ -51,7 +53,7 @@ sub render {
   
 }
 
-our $VERSION = '0.054';
+our $VERSION = '0.055';
 
 #=============================================
 package DBIx::Mojo::Statement;
@@ -59,7 +61,7 @@ package DBIx::Mojo::Statement;
 use Mojo::Base -base;
 use Hash::Merge qw(merge);
 
-has [qw(name sql param mt vars sth)];
+has [qw(dict name sql param mt vars sth)];
 # sth - attr for save cached dbi statement
 
 use overload '""' => sub { shift->sql };
@@ -69,8 +71,9 @@ sub template { shift->render(@_) }
 sub render {
   my $self = shift;
   my $vars =ref $_[0] ? shift : { @_ };
+  $vars->{dict} ||= $self->dict;
   
-  $self->mt->render($self->sql, %$vars ? %{$self->vars} ? merge($vars, $self->vars) : $vars : $self->vars);
+  $self->mt->render($self->sql, merge($vars, $self->vars));#%$vars ? %{$self->vars} ? merge($vars, $self->vars) : $vars : $self->vars
   
 }
 
@@ -90,7 +93,7 @@ DBIx::Mojo::Template - Render SQL statements templates by Mojo::Template
 
 =head1 VERSION
 
-0.054
+0.055
 
 =head1 SYNOPSIS
 

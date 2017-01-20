@@ -61,11 +61,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = DBIx::Mojo::Template
 NAME_SYM = DBIx_Mojo_Template
-VERSION = 0.054
+VERSION = 0.055
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_054
+VERSION_SYM = 0_055
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.054
+XS_VERSION = 0.055
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -263,7 +263,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = DBIx-Mojo-Template
-DISTVNAME = DBIx-Mojo-Template-0.054
+DISTVNAME = DBIx-Mojo-Template-0.055
 
 
 # --- MakeMaker macro section:
@@ -513,7 +513,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '  Hash::Merge: '\''0.2'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  Mojolicious: '\''6'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  perl: '\''5.006'\''' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version: '\''0.054'\''' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version: '\''0.055'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'x_serialization_backend: '\''CPAN::Meta::YAML version 0.018'\''' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
@@ -558,7 +558,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
 	$(NOECHO) $(ECHO) '   "release_status" : "stable",' >> META_new.json
-	$(NOECHO) $(ECHO) '   "version" : "0.054",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "version" : "0.055",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "x_serialization_backend" : "JSON::PP version 2.27400_01"' >> META_new.json
 	$(NOECHO) $(ECHO) '}' >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
@@ -868,7 +868,7 @@ testdb_static :: static pure_all
 # --- MakeMaker ppd section:
 # Creates a PPD (Perl Package Description) for a binary distribution.
 ppd :
-	$(NOECHO) $(ECHO) '<SOFTPKG NAME="DBIx-Mojo-Template" VERSION="0.054">' > DBIx-Mojo-Template.ppd
+	$(NOECHO) $(ECHO) '<SOFTPKG NAME="DBIx-Mojo-Template" VERSION="0.055">' > DBIx-Mojo-Template.ppd
 	$(NOECHO) $(ECHO) '    <ABSTRACT>Render SQL statements templates by Mojo::Template</ABSTRACT>' >> DBIx-Mojo-Template.ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>ÐÐ¸ÑÐ°Ð¸Ð» Ð§Ðµ (Mikhail Che) &lt;mche[-at-]cpan.org&gt;</AUTHOR>' >> DBIx-Mojo-Template.ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> DBIx-Mojo-Template.ppd
