@@ -4,7 +4,7 @@ use Mojo::Loader qw(data_section);
 use Mojo::Template;
 use Mojo::URL;
 use Mojo::Util qw(url_unescape);
-use Scalar::Util 'weaken';
+#~ use Scalar::Util 'weaken';
 
 #~ has debug => $ENV{DEBUG_DBIx_Mojo_Template} || 0;
 #~ my $pkg = __PACKAGE__;
@@ -27,7 +27,7 @@ sub data {
   die "Package not defined!"
     unless $pkg;
   my $data = {};
-  weaken $data;
+  #~ weaken $data;
   while ( my ($k, $t) = each %{data_section $pkg})  {
     my $url = Mojo::URL->new($k);
     my ($name, $param) = (url_unescape($url->path), $url->query->to_hash);
