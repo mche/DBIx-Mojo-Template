@@ -4,7 +4,7 @@ use Mojo::Loader qw(data_section);
 use Mojo::Template;
 use Mojo::URL;
 use Mojo::Util qw(url_unescape);
-#~ use Scalar::Util 'weaken';
+
 
 #~ has debug => $ENV{DEBUG_DBIx_Mojo_Template} || 0;
 #~ my $pkg = __PACKAGE__;
@@ -60,6 +60,7 @@ package DBIx::Mojo::Statement;
 #=============================================
 use Mojo::Base -base;
 use Hash::Merge qw(merge);
+use Scalar::Util 'weaken';
 
 has [qw(dict name sql param mt vars sth)];
 # sth - attr for save cached dbi statement
@@ -72,6 +73,7 @@ sub render {
   my $self = shift;
   my $vars =ref $_[0] ? shift : { @_ };
   $vars->{dict} ||= $self->dict;
+  weaken $self->dict;
   
   $self->mt->render($self->sql, merge($vars, $self->vars));#%$vars ? %{$self->vars} ? merge($vars, $self->vars) : $vars : $self->vars
   
