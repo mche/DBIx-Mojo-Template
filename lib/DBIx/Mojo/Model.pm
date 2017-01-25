@@ -3,6 +3,7 @@ use Mojo::Base -base;
 use Carp 'croak';
 use DBIx::Mojo::Template;
 use Hash::Merge qw( merge );
+use Scalar::Util 'weaken';
 
 my %DICT_CACHE = ();# для каждого пакета/модуля
 
@@ -24,17 +25,21 @@ sub new {
   
   $self->dbh($singleton->dbh)
     unless $self->dbh;
+  weaken $self->dbh;
     
   $self->template_vars(merge($self->template_vars || {}, $singleton->template_vars))
+    and weaken $self->template_vars
     if $singleton->template_vars && %{$singleton->template_vars};
   
   $self->mt(merge($self->mt || {}, $singleton->mt))
+    and weaken $self->mt
     if $singleton->mt && %{$singleton->mt};
   
   my $class = ref $self;
   
   $self->dict( $DICT_CACHE{$class} ||= DBIx::Mojo::Template->new($class, mt=> $self->mt, vars => $self->template_vars) )
     unless $self->dict;
+  weaken $self->dict;
   
   $self->debug
     && say STDERR "[DEBUG $PKG new] parsed dict keys [@{[keys %{$self->dict}]}] for class [$class]";
