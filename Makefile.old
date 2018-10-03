@@ -43,11 +43,11 @@ FULL_AR = /usr/bin/ar
 LD = cc
 LDDLFLAGS = -shared -O2 -L/usr/local/lib -fstack-protector-strong
 LDFLAGS =  -fstack-protector-strong -L/usr/local/lib
-LIBC = libc-2.23.so
+LIBC = libc-2.25.so
 LIB_EXT = .a
 OBJ_EXT = .o
 OSNAME = linux
-OSVERS = 4.4.33-calculate
+OSVERS = 4.9.51-calculate
 RANLIB = :
 SITELIBEXP = /home/guest/perl5/perlbrew/perls/perl-5.26.1/lib/site_perl/5.26.1
 SITEARCHEXP = /home/guest/perl5/perlbrew/perls/perl-5.26.1/lib/site_perl/5.26.1/x86_64-linux
@@ -62,11 +62,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = DBIx::Mojo::Template
 NAME_SYM = DBIx_Mojo_Template
-VERSION = 0.056
+VERSION = 0.057
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_056
+VERSION_SYM = 0_057
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.056
+XS_VERSION = 0.057
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -264,7 +264,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = DBIx-Mojo-Template
-DISTVNAME = DBIx-Mojo-Template-0.056
+DISTVNAME = DBIx-Mojo-Template-0.057
 
 
 # --- MakeMaker macro section:
@@ -517,7 +517,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '  perl: '\''5.006'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'resources:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  repository: git://github.com/mche/DBIx-Mojo-Template.git' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version: '\''0.056'\''' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version: '\''0.057'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'x_serialization_backend: '\''CPAN::Meta::YAML version 0.018'\''' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
@@ -570,7 +570,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '         "web" : "https://github.com/mche/DBIx-Mojo-Template"' >> META_new.json
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
-	$(NOECHO) $(ECHO) '   "version" : "0.056",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "version" : "0.057",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "x_serialization_backend" : "JSON::PP version 2.27400_02"' >> META_new.json
 	$(NOECHO) $(ECHO) '}' >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
@@ -880,7 +880,7 @@ testdb_static :: static pure_all
 # --- MakeMaker ppd section:
 # Creates a PPD (Perl Package Description) for a binary distribution.
 ppd :
-	$(NOECHO) $(ECHO) '<SOFTPKG NAME="DBIx-Mojo-Template" VERSION="0.056">' > DBIx-Mojo-Template.ppd
+	$(NOECHO) $(ECHO) '<SOFTPKG NAME="DBIx-Mojo-Template" VERSION="0.057">' > DBIx-Mojo-Template.ppd
 	$(NOECHO) $(ECHO) '    <ABSTRACT>Render SQL statements templates by Mojo::Template</ABSTRACT>' >> DBIx-Mojo-Template.ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>ÐÐ¸ÑÐ°Ð¸Ð» Ð§Ðµ (Mikhail Che) &lt;mche[-at-]cpan.org&gt;</AUTHOR>' >> DBIx-Mojo-Template.ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> DBIx-Mojo-Template.ppd
