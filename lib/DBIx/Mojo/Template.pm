@@ -98,14 +98,14 @@ sub _data_dict_files {
   return $dict;
 }
 
-our $VERSION = '0.058';
+our $VERSION = '0.059';
 
 #=============================================
 package DBIx::Mojo::Statement;
 #=============================================
 use Mojo::Base -base;
 use Hash::Merge qw(merge);
-#~ use Scalar::Util 'weaken';
+use Scalar::Util 'weaken';
 
 has [qw(dict name raw param mt vars sth)];
 # sth - attr for save cached dbi statement
@@ -120,7 +120,8 @@ sub render {
   my $merge = merge($vars, $self->vars);
   $merge->{dict} ||= $self->dict;
   $merge->{DICT} = $self->dict;
-  #~ weaken $self->dict;
+  $merge->{st} = $self;
+  weaken $merge->{st};
   
   $self->mt->render($self->raw, $merge);#%$vars ? %{$self->vars} ? merge($vars, $self->vars) : $vars : $self->vars
   
@@ -142,7 +143,7 @@ DBIx::Mojo::Template - Render SQL statements by Mojo::Template
 
 =head1 VERSION
 
-0.058
+0.059
 
 =head1 SYNOPSIS
 
@@ -151,6 +152,8 @@ DBIx::Mojo::Template - Render SQL statements by Mojo::Template
   my $dict = DBIx::Mojo::Template->new(__PACKAGE__,mt=>{tag_start=>'%{', tag_end=>'%}',});
   
   my $sql = $dict->{'foo'}->render(table=>'foo', where=> 'where id=?');
+  # or same
+  my $sql = $dict->render('bar', where=> 'where id=?');
   
   __DATA__
   @@ foo?cache=1
