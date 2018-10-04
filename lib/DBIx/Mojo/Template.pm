@@ -27,13 +27,15 @@ sub data {
   die "Package not defined!"
     unless $pkg;
   my $dict = {};
-  #~ weaken $dict;
   my $data = data_section($pkg) || {};
-  my $extra = $class->_data_dict_files($pkg => @{$arg{data}})
-    if ref($arg{data}) eq 'ARRAY';#$pkg ne 'main' && 
-  @$data{keys %$extra} = values %$extra
-    if ref($extra) eq 'HASH';
-  while ( my ($k, $t) = each %$data)  {
+  my $extra = $class->_data_dict_files($pkg => @{$arg{data} || []});
+    #~ if ref($arg{data}) eq 'ARRAY';#$pkg ne 'main' && 
+  #~ @$data{keys %$extra} = values %$extra
+    #~ if ref($extra) eq 'HASH';
+  #prio: near over far
+  @$extra{keys %$data} = values %$data;
+  
+  while ( my ($k, $t) = each %$extra)  {
     my $url = Mojo::URL->new($k);
     my ($name, $param) = (url_unescape($url->path), $url->query->to_hash);
     utf8::decode($name);
@@ -96,7 +98,7 @@ sub _data_dict_files {
   return $dict;
 }
 
-our $VERSION = '0.057';
+our $VERSION = '0.058';
 
 #=============================================
 package DBIx::Mojo::Statement;
@@ -136,11 +138,11 @@ sub render {
 
 =head1 NAME
 
-DBIx::Mojo::Template - Render SQL statements templates by Mojo::Template
+DBIx::Mojo::Template - Render SQL statements by Mojo::Template
 
 =head1 VERSION
 
-0.057
+0.058
 
 =head1 SYNOPSIS
 
@@ -188,7 +190,7 @@ Defaults <mt> attrs:
 
 =item * data (arrayref) - optional
 
-Define extra data files for dictionary. Absolute or relative to path of the module.
+Define extra data files for dictionary. Absolute or relative to path of the module $pkg file point.
 
 =back
 
